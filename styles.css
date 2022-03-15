@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+}
+
+.nav-principal{
+    background-color: whitesmoke;
+    background-size: 80px;
+    display: flex;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+}
+
+.nav-item{
+    text-decoration: none;
+    list-style: none;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 35px;
+    line-height: 80px;
+}
+
+.logo{
+    text-decoration: none;
+    color: black;
+    font-size: 35px;
+    font-family: 'Poppins', sans-serif;
+    line-height: 80px;
+    padding-left: 30px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.nav-ul{
+    display: flex;
+}
+
+.nav-item:hover{
+    transition: color 0.2s ease-in-out;
+    color: #25ff77;
+
+}
+
+.principal-page{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.frontend-img{
+    width: 530px;
+    padding-top: 150px;
+    padding-right: 80px;
+    cursor: default;
+}
+
+.principal-title{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 70px;
+    padding-top: 220px;
+    padding-left: 70px;
+    cursor: default;
+}
+.second-text{
+    font-family: 'Montserrat', sans-serif;
+    padding-left: 75px;
+    cursor: default;
+}
+
+.span:hover{
+    transition: all 0.3s ease-in-out;
+    color: #25ff77;
+}
+
+.about-title{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+    padding: 90px 0px 0px 70px;
+    margin-top: 100px;
+}
+
+.about-description{
+    cursor: default;
+    font-family: 'Montserrat';
+    margin: 200px 80px 130px 35px;
+    font-size: 21px
+}
+
+.about-text{
+    display: flex;
+}
+
+.about-img{
+    width: 600px;
+    margin: 90px 40px 100px 50px;
+}
+
+.about{
+    background-color: white;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
+
+.H{
+    color: #25ff77;
+}
+
+
+.html-img{
+    width: 400px;
+    margin: 90px 20px 90px 20px;
+}
+
+.css-img{
+    width: 400px;
+    margin: 90px 20px 90px 20px;
+}
+
+.python-img{
+    width: 400px;
+    margin: 90px 20px 90px 20px;
+}
+
+
+.container{
+    width: 380px;
+    background: rgb(240, 234, 234);
+    margin-left: 35%;
+    margin: 100px 150px 250px 400px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 2 20px 25px rgba(58, 55, 55, 0.2);
+}
+
+@keyframes load{
+    from{
+        width: 0%;
+    }
+}
+
+@-webkit-keyframes load{
+    from{
+        width: 0%;
+    }
+}
+
+@-moz-keyframes load{
+    from{
+        width: 0%;
+    }
+}
+
+.h1{
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.box{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.box li h5{
+    margin-bottom: 10px;
+}
+
+.bar{
+    height: 18px;
+    background: #eee;
+    margin-bottom: 15px;
+    border-radius: 15px;
+}
+
+.bar::before{
+    content: "";
+    background-color: #25ff77;
+    display: inline-block;
+    padding: 8px;
+    border-radius: inherit;
+    animation: load 3s 0s;
+    -webkit-animation: load 3s 0s;
+    -moz-animation: load 3s 0s;
+    -o-animation: loas 3s 0s;
+}
+
+.bar.bar1::before{
+    width: calc(95% - 10px);
+}
+
+.bar.bar2::before{
+    width: calc(80% - 10px);
+}
+
+.bar.bar3::before{
+    width: calc(20% - 10px);
+}
+
+.about-font{
+    font-family: 'Montserrat';
+}
+
+.footer{
+    background-color: #041b2e;
+    padding-bottom: 50px;
+    padding-left: 550px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.fa{
+    font-size: 25px;
+    padding: 10px 15px 1px 0px;
+    color: white;
+    text-decoration: none;
+
+}
+
+.contact{
+    margin: 20px 0px 10px 0px;
+    padding-top: 10px;
+    color: white;
+    font-family: 'Poppins';
+    margin-left: 25px;
+}
+
+.fa-instagram:hover{
+    transition: color 0.3s ease-in-out;
+    color: #da20ca;
+}
+
+.fa-twitter:hover{
+    transition: color 0.3s ease-in-out;
+    color:  #00acee;
+}
+
+.fa-github:hover{
+    transition: color 0.3s ease-in-out;
+    color:  #171515;
+}
+.fa-linkedin:hover{
+    transition: color 0.3s ease-in-out;
+    color:  #0e76a8;
+}
+
+.copyright{
+    color: white;
+    font-family: 'Poppins';
+    margin-top: 20px;
+    margin-bottom: 0px;
+    font-size: 8px;
+}
