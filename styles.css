@@ -29,7 +29,7 @@ body{
     text-align: center;
     flex-direction: column;
     margin: 0% 10%;
-    height: 25%;
+    height: 50vh;
 }
 .contacto{
     display: flex;
