@@ -39,6 +39,7 @@ body{
     flex-direction: column;
     height: 15vh;
     background-color: #38B6FF;
+    color: white;
 }
 
 .button{
@@ -50,6 +51,7 @@ body{
     text-decoration: none;
     border: 2px solid #38B6FF;
     padding: 0px 5px;
+    margin-top: 2%;
 }
 .button:hover{
     background-color: #28708a00;
@@ -83,7 +85,35 @@ nav{
     align-items: center;
     position: fixed;
     width: 100%;
+    height: auto;
 }
+@media screen and (max-width: 768px){
+        .nav{
+            flex-direction: column;
+            height: 5vh;
+        }
+}
+
+@media screen and (max-width: 768px){
+    .ul{
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .botones-nav{
+        flex-direction: column;
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .label{
+        margin-top: 0.7vh;
+    }
+}
+
+
 .ul{
     display: flex;
     justify-content: space-between;
