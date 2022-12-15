@@ -28,7 +28,8 @@ body{
     align-items: center;
     text-align: center;
     flex-direction: column;
-    margin: 0vh 10vh;
+    margin: 0% 10%;
+    height: 50vh;
 }
 .contacto{
     display: flex;
@@ -36,6 +37,8 @@ body{
     align-items: center;
     text-align: center;
     flex-direction: column;
+    height: 15vh;
+    background-color: #38B6FF;
 }
 
 .button{
@@ -90,6 +93,12 @@ nav{
     font-size: 3vh;
     font-display: 10px;
     letter-spacing: 25px;
+    color: invert;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: row;
 }
 #fa:hover{
     color: #3b5998;
