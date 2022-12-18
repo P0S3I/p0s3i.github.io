@@ -102,33 +102,33 @@ nav{
     height: auto;
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
         .nav{
             flex-direction: column;
             height: 5vh;
         }
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
     .ul{
         flex-direction: column;
     }
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
     .botones-nav{
         flex-direction: column;
         display: none;
     }
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
     .label{
         margin-top: 0.7vh;
     }
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
     .button{
         font-size: 25px;
         border-radius: 20px;
@@ -136,7 +136,7 @@ nav{
     }
 }
 
-@media screen and (max-width: 858px){
+@media screen and (max-width: 600px){
     .sn{
         font-size: 20px;
     }
