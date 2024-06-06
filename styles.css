@@ -1,0 +1,66 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #f0f0f0;
+}
+
+.game-container {
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Establece un ancho máximo */
+    width: 90%; /* Ajusta el ancho para dispositivos más pequeños */
+}
+
+.airplane {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    transition: transform 1s ease-in-out; /* Hace la animación del avión más lenta */
+}
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#multiplier {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.balance {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.controls > * {
+    margin: 5px 0; /* Añade un pequeño margen entre los elementos */
+}
+
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 600px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .airplane {
+        font-size: 2rem;
+    }
+
+    #multiplier {
+        font-size: 1.2rem;
+    }
+
+    .balance {
+        font-size: 1.2rem;
+    }
+}
