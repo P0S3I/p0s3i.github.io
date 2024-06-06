@@ -1,211 +1,66 @@
-*{
-    font-family: 'Poppins', sans-serif;
-}
-
-body{
-    background-color: #09002b;
-    margin: 0;
-}
-
-.logo{
-    text-decoration: none;
-    color: white;
-    margin-left: 2vh;
-    font-size: 3vh;
-    font-family: 'Open Sans', sans-serif;
-}
-
-.li{
-    list-style: none;
-}
-
-.botones-nav{
-    color: white;
-    text-decoration: none;
-    margin: 3vh 4vh;
-    text-align: center;
-}
-
-.sn{
+body {
+    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    flex-direction: column;
-    margin: 0% 10%;
-    height: 50vh;
-    color: white;
-}
-
-.contacto{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex-direction: column;
-    height: 12vh;
-    background-color: #38B6FF;
-    color: white;
-}
-
-
-.button{
-    background-color: #38B6FF;
-    color: white;
-    border-radius: 10px;
-    font-size: 30px;
-    background-size: 100px;
-    text-decoration: none;
-    border: 2px solid #38B6FF;
-    padding: 0px 5px;
-    margin-top: 2%;
-    transition: 0.3s;
-}
-
-.button:hover{
-    background-color: #28708a00;
-    border: 2px solid #38B6FF;
-    transition: 0.3s;
-}
-
-
-h1{
-    font-size: 7vh;
-    align-items: center;
-    margin: 0 5vh;
-    color: rgb(255, 255, 255);
-}
-
-.hero{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    flex-direction: column;
-    background-image: url("img/fondo-3.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center;
-    padding: 0px;
-    margin: 0px;
     height: 100vh;
-    
+    margin: 0;
+    background: #f0f0f0;
 }
 
-nav{
-    background-color: #38B6FF;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    width: 100%;
-    height: auto;
-}
-
-@media screen and (max-width: 600px){
-        .nav{
-            flex-direction: column;
-            height: 5vh;
-        }
-}
-
-@media screen and (max-width: 600px){
-    .ul{
-        flex-direction: column;
-    }
-}
-
-@media screen and (max-width: 600px){
-    .botones-nav{
-        flex-direction: column;
-        display: none;
-    }
-}
-
-@media screen and (max-width: 600px){
-    .label{
-        margin-top: 0.7vh;
-    }
-}
-
-@media screen and (max-width: 600px){
-    .button{
-        font-size: 25px;
-        border-radius: 20px;
-        padding: 0px 25px;
-    }
-}
-
-@media screen and (max-width: 600px){
-    .sn{
-        font-size: 20px;
-    }
-}
-
-.ul{
-    display: flex;
-    justify-content: space-between;
-}
-
-.iconos{
-    display: flex;
-    font-size: 3vh;
-    font-display: 10px;
-    letter-spacing: 25px;
-    color: invert;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.game-container {
     text-align: center;
-    flex-direction: row;
-    cursor: pointer;
-    text-decoration: none;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Establece un ancho máximo */
+    width: 90%; /* Ajusta el ancho para dispositivos más pequeños */
 }
 
-#fa:hover{
-    color: #3b5998;
-    transition: 0.5s ease;
+.airplane {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    transition: transform 1s ease-in-out; /* Hace la animación del avión más lenta */
 }
 
-#in:hover{
-    color: #E1306C;
-    transition: 0.5s ease;
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#tik:hover{
-    color: #000000;
-    transition: 0.5s ease;
+#multiplier {
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
-#co:hover{
-    color: #ff5e5e;
-    transition: 0.5s ease;
+.balance {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
-#fa{
-    color: white;
-    transition: 0.5s;
-    text-decoration: none;
+.controls > * {
+    margin: 5px 0; /* Añade un pequeño margen entre los elementos */
 }
 
-#in{
-    color: white;
-    transition: 0.5s;
-    text-decoration: none;
-}
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 600px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .airplane {
+        font-size: 2rem;
+    }
 
-#tik{
-    color: white;
-    transition: 0.5s;
-    text-decoration: none;
-}
+    #multiplier {
+        font-size: 1.2rem;
+    }
 
-#co{
-    color: white;
-    transition: 0.5s;
-    text-decoration: none;
-}
-
-.icon-logo{
-    width: 3vh;
+    .balance {
+        font-size: 1.2rem;
+    }
 }
