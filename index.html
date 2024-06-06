@@ -1,45 +1,25 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>    
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>Leviatan</title>
-    <link rel="icon" href="img/icon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Avión</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Open+Sans&family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <style> @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Open+Sans&family=Poppins:wght@300&display=swap'); </style>
-    <script src="https://kit.fontawesome.com/aa0f396cb7.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <header>
-        <div>
-            <nav class="nav">
-                <label for="" class="label"><a href="" class="logo"><img class="icon-logo" src="img/icon-2.png" alt="icon"> Leviatán</a></label>
-                <ul class="ul">
-                    <li class="li"><a href="" class="botones-nav">Tienda</a></li>
-                    <li class="li"><a href="#sobre-nosotros" class="botones-nav">Sobre Nosotros</a></li>
-                    <li class="li"><a href="#contact" class="botones-nav">Contactanos</a></li>
-                </ul>
-            </nav>
+    <div class="game-container">
+        <h1>Juego del Avión</h1>
+        <div class="balance">Saldo: $<span id="balance">1000.00</span></div>
+        <div class="airplane" id="airplane">✈️</div>
+        <div class="controls">
+            <label for="bet">Apuesta: </label>
+            <input type="number" id="bet" min="1" step="1" value="10">
+            <button id="start-button">Iniciar</button>
+            <button id="cashout-button" disabled>Retirar</button>
+            <div id="status"></div>
         </div>
-    </header>
-    <section class="hero">
-        <h1>UN NUEVO MUNDO DE VIDEOJUEGOS<br>HECHO PARA VOS</h1>
-        <a href="" class="button">Explorar</a>
-    </section>
-    <section class="sn" id="sobre-nosotros">
-        <h2>Sobre Nosotros</h2>
-        <h4>Somos Leviatán, que nace de la pasión y el amor por los videojuegos y las consolas, de ese amor por el mundo de la tecnología y la gran comunidad que la abarca, por eso junto a vos queremos hacer crecer este pequeño lugar para formar una bonita comunidad</h4>
-    </section>
-    <section class="contacto" id="contact">
-        <h2>Redes y Contacto</h2>
-        <div class="iconos" id="contacto">
-            <i class="fa-solid fa-envelope" id="co"></i>
-            <a href="https://www.facebook.com/leviatan.store" class="fa-brands" id="fa"></a>
-            <a href="https://www.instagram.com/leviatanstorebo/" class="fa-brands" id="in"></a>
-            <a href="https://www.tiktok.com/@leviatanstorebo" class="fa-brands" id="tik"></a>
-        </div>
-    </section>
+        <div class="multiplier">Multiplicador: <span id="multiplier">1.00</span>x</div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
