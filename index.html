@@ -1,25 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego del Avión</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Simulador de Tiro Parabólico</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #e8e8e8;
+    }
+    .container {
+      padding: 20px;
+    }
+    canvas {
+      border: 2px solid #333;
+      background-color: #d0f4ff;
+      margin-top: 20px;
+    }
+    .input-group {
+      margin: 10px;
+    }
+    label {
+      margin-right: 5px;
+    }
+    input {
+      width: 80px;
+    }
+    #resultados {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: inline-block;
+      text-align: left;
+    }
+    #tablaResultados {
+      margin-top: 20px;
+      border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #tablaResultados th, #tablaResultados td {
+      border: 1px solid #999;
+      padding: 6px 12px;
+    }
+    button {
+      margin-left: 5px;
+      padding: 4px 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Juego del Avión</h1>
-        <div class="balance">Saldo: $<span id="balance">1000.00</span></div>
-        <div class="airplane" id="airplane">✈️</div>
-        <div class="controls">
-            <label for="bet">Apuesta: </label>
-            <input type="number" id="bet" min="1" step="1" value="10">
-            <button id="start-button">Iniciar</button>
-            <button id="cashout-button" disabled>Retirar</button>
-            <div id="status"></div>
-        </div>
-        <div class="multiplier">Multiplicador: <span id="multiplier">1.00</span>x</div>
+  <div class="container">
+    <h1>Simulador de Tiro Parabólico</h1>
+
+    <div class="input-group">
+      <label>Vel. Inicial (m/s):</label>
+      <input type="range" id="velocidad" value="30" min="0" max="100" oninput="this.nextElementSibling.value = this.value">
+      <output>30</output>
+      <label>Ángulo (°):</label>
+      <input type="range" id="angulo" value="45" min="0" max="90" oninput="this.nextElementSibling.value = this.value">
+      <output>45</output>
+      <label>Altura Inicial (m):</label>
+      <input type="range" id="altura" value="1" min="0" max="50" oninput="this.nextElementSibling.value = this.value">
+      <output>1</output>
+      <button onclick="iniciarSimulacion()">Lanzar</button>
+      <button onclick="detenerSimulacion()">Stop</button>
+      <button onclick="limpiarTodo()">Limpiar</button>
     </div>
-    <script src="script.js"></script>
+
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div id="resultados"></div>
+    <table id="tablaResultados"></table>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const g = 9.81;
+    const escala = 8;
+    const fps = 60;
+    const dt = 1 / fps;
+    const radioPelota = 5;
+
+    let animationId = null;
+    let disparos = [];
+
+    function iniciarSimulacion() {
+      const v0 = parseFloat(document.getElementById('velocidad').value);
+      const ang = parseFloat(document.getElementById('angulo').value);
+      const y0 = parseFloat(document.getElementById('altura').value);
+      const rad = ang * Math.PI / 180;
+
+      const v0x = v0 * Math.cos(rad);
+      const v0y = v0 * Math.sin(rad);
+      const discriminante = v0y ** 2 + 2 * g * y0;
+      const t_total = (v0y + Math.sqrt(discriminante)) / g;
+      const h_max = y0 + (v0y ** 2) / (2 * g);
+      const d_total = v0x * t_total;
+
+      const color = getRandomColor();
+      disparos.push({ v0x, v0y, y0, t: 0, color, puntos: [], t_total, h_max, d_total, activo: true });
+
+      actualizarTabla();
+      if (!animationId) {
+        animar();
+      }
+    }
+
+    function detenerSimulacion() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+    }
+
+    function limpiarTodo() {
+      disparos = [];
+      detenerSimulacion();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById('tablaResultados').innerHTML = "";
+    }
+
+    function getRandomColor() {
+      const colores = ["red", "blue", "green", "orange", "purple", "magenta", "cyan"];
+      return colores[Math.floor(Math.random() * colores.length)];
+    }
+
+    function dibujarFondo() {
+      ctx.fillStyle = "#d0f4ff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#70c070";
+      ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+
+      for (let i = 50; i < canvas.width; i += 150) {
+        ctx.fillStyle = "#8B4513";
+        ctx.fillRect(i, canvas.height - 60, 10, 40);
+        ctx.beginPath();
+        ctx.arc(i + 5, canvas.height - 70, 20, 0, 2 * Math.PI);
+        ctx.fillStyle = "#228B22";
+        ctx.fill();
+      }
+
+      ctx.fillStyle = "#5a2e00";
+      ctx.fillRect(0, canvas.height - 20, 40, 20);
+    }
+
+    function animar() {
+      dibujarFondo();
+
+      disparos.forEach((disparo, index) => {
+        const { v0x, v0y, y0, color } = disparo;
+        const t = disparo.t;
+        const x = v0x * t;
+        const y = y0 + v0y * t - 0.5 * g * t * t;
+        const vx = v0x;
+        const vy = v0y - g * t;
+
+        if (y >= 0 && disparo.activo) {
+          const px = x * escala;
+          const py = canvas.height - y * escala;
+          disparo.puntos.push({ x: px, y: py });
+
+          ctx.beginPath();
+          ctx.arc(px, py, radioPelota, 0, 2 * Math.PI);
+          ctx.fillStyle = color;
+          ctx.fill();
+
+          ctx.fillStyle = "#000";
+          ctx.font = "12px Arial";
+          ctx.fillText(`t: ${t.toFixed(2)} s`, px + 10, py - 10);
+          ctx.fillText(`v: ${Math.sqrt(vx**2 + vy**2).toFixed(2)} m/s`, px + 10, py + 5);
+
+          ctx.strokeStyle = color;
+          ctx.setLineDash([5, 5]);
+          ctx.beginPath();
+          for (let i = 0; i < disparo.puntos.length - 1; i++) {
+            ctx.moveTo(disparo.puntos[i].x, disparo.puntos[i].y);
+            ctx.lineTo(disparo.puntos[i + 1].x, disparo.puntos[i + 1].y);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          disparo.t += dt;
+        } else {
+          disparo.activo = false;
+        }
+
+        if (!disparo.activo && disparo.puntos.length > 0) {
+          const ult = disparo.puntos[disparo.puntos.length - 1];
+          ctx.beginPath();
+          ctx.arc(ult.x, ult.y, radioPelota, 0, 2 * Math.PI);
+          ctx.fillStyle = color;
+          ctx.fill();
+        }
+      });
+
+      animationId = requestAnimationFrame(animar);
+    }
+
+    function actualizarTabla() {
+      const tabla = document.getElementById('tablaResultados');
+      let html = '<tr><th>Pelota</th><th style="color:black">Color</th><th>Altura Máx. (m)</th><th>Tiempo Total (s)</th><th>Distancia (m)</th></tr>';
+      disparos.forEach((d, i) => {
+        html += `<tr>
+          <td>Pelota ${i + 1}</td>
+          <td style="color:${d.color}">${d.color}</td>
+          <td>${d.h_max.toFixed(2)}</td>
+          <td>${d.t_total.toFixed(2)}</td>
+          <td>${d.d_total.toFixed(2)}</td>
+        </tr>`;
+      });
+      tabla.innerHTML = html;
+    }
+  </script>
 </body>
 </html>
