@@ -88,6 +88,7 @@
 
     let animationId = null;
     let disparos = [];
+    const coloresUsados = [];
 
     function iniciarSimulacion() {
       const v0 = parseFloat(document.getElementById('velocidad').value);
@@ -122,12 +123,20 @@
       disparos = [];
       detenerSimulacion();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      coloresUsados.length = 0; // Limpiar colores usados
+      dibujarFondo(); // Redibujar fondo para mantener los árboles y demás elementos
       document.getElementById('tablaResultados').innerHTML = "";
     }
 
     function getRandomColor() {
       const colores = ["red", "blue", "green", "orange", "purple", "magenta", "cyan"];
-      return colores[Math.floor(Math.random() * colores.length)];
+      let color;
+      do {
+        color = colores[Math.floor(Math.random() * colores.length)];
+      } while (coloresUsados.includes(color)); // Evitar colores repetidos
+
+      coloresUsados.push(color);
+      return color;
     }
 
     function dibujarFondo() {
@@ -153,42 +162,49 @@
     function animar() {
       dibujarFondo();
 
-      disparos.forEach((disparo, index) => {
+      disparos.forEach((disparo) => {
         const { v0x, v0y, y0, color } = disparo;
-        const t = disparo.t;
-        const x = v0x * t;
-        const y = y0 + v0y * t - 0.5 * g * t * t;
-        const vx = v0x;
-        const vy = v0y - g * t;
+        let t = disparo.t;
 
-        if (y >= 0 && disparo.activo) {
-          const px = x * escala;
-          const py = canvas.height - y * escala;
-          disparo.puntos.push({ x: px, y: py });
+        if (disparo.activo) {
+          const x = v0x * t;
+          const y = y0 + v0y * t - 0.5 * g * t * t;
 
-          ctx.beginPath();
-          ctx.arc(px, py, radioPelota, 0, 2 * Math.PI);
-          ctx.fillStyle = color;
-          ctx.fill();
+          if (y >= 0) {
+            const px = x * escala;
+            const py = canvas.height - y * escala;
+            disparo.puntos.push({ x: px, y: py });
 
-          ctx.fillStyle = "#000";
-          ctx.font = "12px Arial";
-          ctx.fillText(`t: ${t.toFixed(2)} s`, px + 10, py - 10);
-          ctx.fillText(`v: ${Math.sqrt(vx**2 + vy**2).toFixed(2)} m/s`, px + 10, py + 5);
+            ctx.beginPath();
+            ctx.arc(px, py, radioPelota, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
 
+            const vx = v0x;
+            const vy = v0y - g * t;
+            ctx.fillStyle = "#000";
+            ctx.font = "12px Arial";
+            ctx.fillText(`t: ${t.toFixed(2)} s`, px + 10, py - 10);
+            ctx.fillText(`v: ${Math.sqrt(vx ** 2 + vy ** 2).toFixed(2)} m/s`, px + 10, py + 5);
+
+            disparo.t += dt;
+          } else {
+            disparo.activo = false;
+          }
+        }
+
+        if (disparo.puntos.length > 1) {
           ctx.strokeStyle = color;
-          ctx.setLineDash([5, 5]);
+          ctx.setLineDash([1, 10]);
           ctx.beginPath();
           for (let i = 0; i < disparo.puntos.length - 1; i++) {
-            ctx.moveTo(disparo.puntos[i].x, disparo.puntos[i].y);
-            ctx.lineTo(disparo.puntos[i + 1].x, disparo.puntos[i + 1].y);
+            const p1 = disparo.puntos[i];
+            const p2 = disparo.puntos[i + 1];
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
           }
           ctx.stroke();
           ctx.setLineDash([]);
-
-          disparo.t += dt;
-        } else {
-          disparo.activo = false;
         }
 
         if (!disparo.activo && disparo.puntos.length > 0) {
@@ -205,11 +221,10 @@
 
     function actualizarTabla() {
       const tabla = document.getElementById('tablaResultados');
-      let html = '<tr><th>Pelota</th><th style="color:black">Color</th><th>Altura Máx. (m)</th><th>Tiempo Total (s)</th><th>Distancia (m)</th></tr>';
+      let html = '<tr><th>Pelota</th><th>Altura Máx. (m)</th><th>Tiempo Total (s)</th><th>Distancia (m)</th></tr>';
       disparos.forEach((d, i) => {
         html += `<tr>
-          <td>Pelota ${i + 1}</td>
-          <td style="color:${d.color}">${d.color}</td>
+          <td style="color:${d.color}">Pelota ${i + 1}</td>
           <td>${d.h_max.toFixed(2)}</td>
           <td>${d.t_total.toFixed(2)}</td>
           <td>${d.d_total.toFixed(2)}</td>
