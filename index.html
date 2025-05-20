@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulador de Tiro Parabólico</title>
+  <meta charset="UTF-8" />
+  <title>Simulador de Tiro Parabólico con Catapulta</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,16 +26,6 @@
     input {
       width: 80px;
     }
-    #resultados {
-      margin-top: 20px;
-      white-space: pre-wrap;
-      font-family: monospace;
-      background: #fff;
-      padding: 10px;
-      border: 1px solid #ccc;
-      display: inline-block;
-      text-align: left;
-    }
     #tablaResultados {
       margin-top: 20px;
       border-collapse: collapse;
@@ -54,8 +44,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Simulador de Tiro Parabólico</h1>
-
+    <h1>Simulador de Tiro Parabólico con Catapulta</h1>
     <div class="input-group">
       <label>Vel. Inicial (m/s):</label>
       <input type="range" id="velocidad" value="30" min="0" max="100" oninput="this.nextElementSibling.value = this.value">
@@ -66,20 +55,17 @@
       <label>Altura Inicial (m):</label>
       <input type="range" id="altura" value="1" min="0" max="50" oninput="this.nextElementSibling.value = this.value">
       <output>1</output>
-      <button onclick="iniciarSimulacion()">Lanzar</button>
+      <button onclick="prepararDisparo()">Lanzar</button>
       <button onclick="detenerSimulacion()">Stop</button>
       <button onclick="limpiarTodo()">Limpiar</button>
     </div>
-
     <canvas id="canvas" width="800" height="400"></canvas>
-    <div id="resultados"></div>
     <table id="tablaResultados"></table>
   </div>
 
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-
     const g = 9.81;
     const escala = 8;
     const fps = 60;
@@ -90,6 +76,23 @@
     let disparos = [];
     const coloresUsados = [];
 
+    const origenX = 40 / escala;
+    const origenY = 2.5;
+    let brazoAngulo = -60;
+    let animandoBrazo = false;
+    let animacionFrames = 0;
+
+    function prepararDisparo() {
+      if (animandoBrazo) return;
+      animandoBrazo = true;
+      animacionFrames = 0;
+      if (disparos.length >= 5) limpiarTodo(false);
+      animarBrazo(() => {
+        iniciarSimulacion();
+        animandoBrazo = false;
+      });
+    }
+
     function iniciarSimulacion() {
       const v0 = parseFloat(document.getElementById('velocidad').value);
       const ang = parseFloat(document.getElementById('angulo').value);
@@ -98,18 +101,29 @@
 
       const v0x = v0 * Math.cos(rad);
       const v0y = v0 * Math.sin(rad);
-      const discriminante = v0y ** 2 + 2 * g * y0;
+      const yInicial = origenY + y0;
+      const discriminante = v0y ** 2 + 2 * g * yInicial;
       const t_total = (v0y + Math.sqrt(discriminante)) / g;
-      const h_max = y0 + (v0y ** 2) / (2 * g);
+      const h_max = yInicial + (v0y ** 2) / (2 * g);
       const d_total = v0x * t_total;
 
       const color = getRandomColor();
-      disparos.push({ v0x, v0y, y0, t: 0, color, puntos: [], t_total, h_max, d_total, activo: true });
+      disparos.push({
+        v0x,
+        v0y,
+        y0: yInicial,
+        x0: origenX,
+        t: 0,
+        color,
+        puntos: [],
+        t_total,
+        h_max,
+        d_total,
+        activo: true
+      });
 
       actualizarTabla();
-      if (!animationId) {
-        animar();
-      }
+      if (!animationId) animar();
     }
 
     function detenerSimulacion() {
@@ -119,13 +133,14 @@
       }
     }
 
-    function limpiarTodo() {
+    function limpiarTodo(resetTabla = true) {
       disparos = [];
       detenerSimulacion();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      coloresUsados.length = 0; // Limpiar colores usados
-      dibujarFondo(); // Redibujar fondo para mantener los árboles y demás elementos
-      document.getElementById('tablaResultados').innerHTML = "";
+      coloresUsados.length = 0;
+      brazoAngulo = -60;
+      dibujarFondo();
+      if (resetTabla) document.getElementById('tablaResultados').innerHTML = "";
     }
 
     function getRandomColor() {
@@ -133,8 +148,7 @@
       let color;
       do {
         color = colores[Math.floor(Math.random() * colores.length)];
-      } while (coloresUsados.includes(color)); // Evitar colores repetidos
-
+      } while (coloresUsados.includes(color));
       coloresUsados.push(color);
       return color;
     }
@@ -142,11 +156,11 @@
     function dibujarFondo() {
       ctx.fillStyle = "#d0f4ff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       ctx.fillStyle = "#70c070";
       ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+      dibujarCatapulta();
 
-      for (let i = 50; i < canvas.width; i += 150) {
+      for (let i = 100; i < canvas.width; i += 150) {
         ctx.fillStyle = "#8B4513";
         ctx.fillRect(i, canvas.height - 60, 10, 40);
         ctx.beginPath();
@@ -154,20 +168,57 @@
         ctx.fillStyle = "#228B22";
         ctx.fill();
       }
+    }
 
-      ctx.fillStyle = "#5a2e00";
-      ctx.fillRect(0, canvas.height - 20, 40, 20);
+    function dibujarCatapulta() {
+      const baseX = 40;
+      const baseY = canvas.height - 20;
+      ctx.fillStyle = "#8B4513";
+      ctx.fillRect(baseX - 15, baseY - 10, 30, 10);
+
+      const brazoLongitud = 60;
+      const anguloRad = brazoAngulo * Math.PI / 180;
+      const brazoX = baseX + brazoLongitud * Math.cos(anguloRad);
+      const brazoY = baseY - 10 + brazoLongitud * Math.sin(anguloRad);
+
+      ctx.strokeStyle = "#8B4513";
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(baseX, baseY - 10);
+      ctx.lineTo(brazoX, brazoY);
+      ctx.stroke();
+
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(brazoX, brazoY, radioPelota, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.lineWidth = 1;
+    }
+
+    function animarBrazo(callback) {
+      const totalFrames = 20;
+      function animarPaso() {
+        if (animacionFrames < totalFrames) {
+          brazoAngulo = -60 + (animacionFrames / totalFrames) * 90;
+          animacionFrames++;
+          dibujarFondo();
+          requestAnimationFrame(animarPaso);
+        } else {
+          brazoAngulo = -60;
+          callback();
+        }
+      }
+      animarPaso();
     }
 
     function animar() {
       dibujarFondo();
-
       disparos.forEach((disparo) => {
-        const { v0x, v0y, y0, color } = disparo;
+        const { v0x, v0y, y0, x0, color } = disparo;
         let t = disparo.t;
 
         if (disparo.activo) {
-          const x = v0x * t;
+          const x = x0 + v0x * t;
           const y = y0 + v0y * t - 0.5 * g * t * t;
 
           if (y >= 0) {
@@ -179,13 +230,6 @@
             ctx.arc(px, py, radioPelota, 0, 2 * Math.PI);
             ctx.fillStyle = color;
             ctx.fill();
-
-            const vx = v0x;
-            const vy = v0y - g * t;
-            ctx.fillStyle = "#000";
-            ctx.font = "12px Arial";
-            ctx.fillText(`t: ${t.toFixed(2)} s`, px + 10, py - 10);
-            ctx.fillText(`v: ${Math.sqrt(vx ** 2 + vy ** 2).toFixed(2)} m/s`, px + 10, py + 5);
 
             disparo.t += dt;
           } else {
@@ -232,6 +276,8 @@
       });
       tabla.innerHTML = html;
     }
+
+    dibujarFondo();
   </script>
 </body>
 </html>
